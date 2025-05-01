@@ -1,0 +1,16 @@
+---
+title: Take-away exercise
+---
+
+Build classifiers with RandomForestClassifier() and DecisionTreeClassifier() on another dataset, e.g., [breast cancer dataset](https://scikit-learn.org/stable/datasets/toy_dataset.html#breast-cancer-dataset), and evaluate the model.
+
+Steps: 
+
+1. Load the data
+2. Prepare the data
+3. Fit the model on training set
+4. Evaluate the model performance on both training and testing sets
+
+
+
+

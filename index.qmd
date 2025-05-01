@@ -1,0 +1,17 @@
+---
+title: Introduction
+---
+
+
+This course introduces two widely used classification models in machine learning: decision trees and random forests. Using Python and the scikit-learn library, we will explore how these algorithms work and how to implement them in practice. You will also learn how to evaluate the model accuracy and understand what is overfitting.
+
+## Intended learning outcomes
+
+By the end of this course, you will:
+
+- Understand what is a Decision Tree
+- Know how to fit and evaluate a Decision Tree on your own data
+- Understand what is a Random Forest
+- Know how to fit and evaluate a Random Forest on your own data
+- Understand the problem of overfitting in ML models
+

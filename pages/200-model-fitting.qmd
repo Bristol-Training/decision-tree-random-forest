@@ -1,0 +1,160 @@
+---
+title: "Model Fitting"
+---
+
+
+## Dataset Exploration
+
+Lets start by importing and exploring the [Wine dataset from scikit-learn](https://scikit-learn.org/stable/datasets/toy_dataset.html#wine-dataset).
+
+```{python}
+from sklearn.datasets import load_wine 
+# Load the wine dataset
+wine_data = load_wine()
+X = wine_data.data
+y = wine_data.target
+feature_names = wine_data.feature_names
+target_names = wine_data.target_names
+
+# print to check the overall structure of our dataset
+# and also to find how many classes we have
+print(f"Dataset dimensions: {X.shape}")
+print(f"Target classes: {target_names}")
+```
+
+```{python}
+import pandas as pd
+
+# Data preparation
+df = pd.DataFrame(X, columns=feature_names)
+df['target'] = y
+df['target_names'] = df['target'].map({0: 'class_0', 1: 'class_1', 2: 'class_2'})
+
+df.head()
+```
+
+```{python}
+from seaborn import pairplot
+
+# Scatter plots - visualize potential correlations or patterns between features
+# The diagonal of the pairplot displays the distribution of each feature
+pairplot(df, hue = 'target', palette = 'Set2', diag_kind = 'kde')
+```
+
+```{python}
+# print to check the target classes distributions
+print("\nTarget distribution:")
+print(df['target_names'].value_counts())
+```
+
+```{python}
+# print to check if there are any missing data in the dataset
+print(df.isnull().sum())
+```
+
+## Model training
+
+### 1. Split the data into training and testing set
+
+```{python}
+from sklearn.model_selection import train_test_split 
+
+# Split into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+print(f"Training set shape: {X_train.shape}")
+print(f"Testing set shape: {X_test.shape}")
+```
+
+### 2. Train the Decision Tree Model
+
+```{python}
+from sklearn.tree import DecisionTreeClassifier 
+
+# Create and train a decision tree classifier with max depth of 3
+tree = DecisionTreeClassifier(max_depth=3, criterion='gini', random_state=42)
+tree.fit(X_train, y_train)
+```
+
+### 3. Visualize the tree
+
+```{python}
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree 
+
+# Visualize the decision tree
+plt.figure(figsize=(15, 8))
+plot_tree(tree, 
+          filled=True, 
+          feature_names=feature_names, 
+          class_names=target_names)
+plt.title("Decision Tree")
+plt.show()
+```
+
+### 4. Evaluate on testing set
+
+Evaluate the model through various metrics and visualize the confusion matrix
+
+```{python}
+from sklearn.metrics import confusion_matrix, classification_report,accuracy_score
+import seaborn as sns
+
+y_pred = tree.predict(X_test)
+
+print(classification_report(y_test, y_pred, target_names=target_names))
+```
+
+```{python}
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=target_names, yticklabels=target_names)
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show();
+```
+
+## Visualize accuracy scores
+
+**Accuracy** measures how often the classifier makes the correct prediction:
+
+$$
+\text{Accuracy} = \frac{\text{Correct predictions}}{\text{Total predictions}}
+$$
+
+```{python}
+# Train Decision Trees with different depths and record accuracy
+max_depth_range = range(1, 10)
+train_accuracies = []
+test_accuracies = []
+
+for depth in max_depth_range:
+    clf = DecisionTreeClassifier(max_depth=depth, random_state=42)
+    clf.fit(X_train, y_train)
+
+    # Predict on training and testing data
+    train_pred = clf.predict(X_train)
+    test_pred = clf.predict(X_test)
+
+    # Accuracy scores
+    train_acc = accuracy_score(y_train, train_pred)
+    test_acc = accuracy_score(y_test, test_pred)
+
+    train_accuracies.append(train_acc)
+    test_accuracies.append(test_acc)
+
+# Plot training vs testing accuracy
+plt.figure(figsize=(8, 5))
+plt.plot(max_depth_range, train_accuracies, label='Training Accuracy', marker='o')
+plt.plot(max_depth_range, test_accuracies, label='Testing Accuracy', marker='s')
+plt.xlabel('Max Depth of Decision Tree')
+plt.ylabel('Accuracy')
+plt.title('Training vs Testing Accuracy')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+```
+
+As we can see, the decision tree performs fairly well on the wine data and the accuracy doesn't change after max_depth > 3. This is because the wine data from scikit-learn is fairly simple and clean. However, this is not common in real life, where data are more complex and noisy.

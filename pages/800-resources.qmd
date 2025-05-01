@@ -1,0 +1,11 @@
+---
+title: Resources
+---
+
+### Further Information:
+1. Decision Tree Classifier (scikit-learn): <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>
+2. Random Forest Classifier (scikit-learn): <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html>
+3. XGBoost package: <https://xgboost.readthedocs.io/en/stable/tutorials/index.html> 
+4. Paper of XGBoost: <https://arxiv.org/abs/1603.02754>
+
+
